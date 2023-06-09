@@ -19,14 +19,18 @@ class Kelas extends Model
     ];
 
     public function jadwalUmum(){
-        return $this->hasMany(Instruktur::class, 'id_kelas', 'id');
+        return $this->hasMany(Kelas::class, 'id_kelas', 'id');
     }
 
     public function jadwalHarian(){
-        return $this->hasMany(Instruktur::class, 'id_kelas','id');
+        return $this->hasMany(Kelas::class, 'id_kelas','id');
     }
 
     public function transaksiDepoK(){
-        return $this->hasMany(Instruktur::class, 'id_kelas','id');
+        return $this->hasMany(Kelas::class, 'id_kelas','id');
+    }
+
+    public function depositKelas(){
+        return $this->hasMany(Kelas::class, 'id_kelas', 'id');
     }
 }

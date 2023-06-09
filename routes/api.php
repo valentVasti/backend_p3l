@@ -44,6 +44,9 @@ Route::post('kelas', 'App\Http\Controllers\KelasController@store');
 Route::put('kelas/{id}', 'App\Http\Controllers\KelasController@update');
 Route::delete('kelas/{id}', 'App\Http\Controllers\KelasController@destroy');
 
+Route::get('depositKelas', 'App\Http\Controllers\DepositKelasController@index');
+Route::get('depositKelas/{id_member}', 'App\Http\Controllers\DepositKelasController@getDepositKelasByMember');
+
 Route::post('role', 'App\Http\Controllers\RoleController@store');
 
 Route::get('pegawai', 'App\Http\Controllers\PegawaiController@index');

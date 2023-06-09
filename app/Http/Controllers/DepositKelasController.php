@@ -13,7 +13,7 @@ class DepositKelasController extends Controller
 
     public function index()
     {
-        $deposit_kelas = Deposit_kelas::all();
+        $deposit_kelas = Deposit_kelas::with('kelas')->get();
 
         if (count($deposit_kelas) > 0) {
             return response([
@@ -179,6 +179,23 @@ class DepositKelasController extends Controller
 
         return response([
             'message' => 'Reset Deposit kelas Failed',
+            'data' => null
+        ], 400);
+    }
+
+    public function getDepositKelasByMember($id_member)
+    {
+        $deposit_kelas = Deposit_kelas::where('id_member', '=', $id_member)->with('kelas')->get();
+
+        if (count($deposit_kelas) > 0) {
+            return response([
+                'message' => 'Retrieve All Success',
+                'data' => $deposit_kelas
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Empty',
             'data' => null
         ], 400);
     }

@@ -21,8 +21,8 @@ class Deposit_kelas extends Model
     ];
 
 
-    public function jadwalUmum(){
-        return $this->hasMany(instruktur::class, 'id_instruktur', 'id');
+    public function kelas(){
+        return $this->belongsTo(Kelas::class, 'id_kelas');
     }
 
     public function jadwalHarian(){
