@@ -80,6 +80,8 @@ class PresensiInstrukturController extends Controller
 
         $storeData['update_jam_mulai'] = $updateJamMulai;
         $storeData['keterlambatan'] = $hours.':'. $minutes.':'.$second;
+        $storeData['update_jam_selesai'] = null;
+        $storeData['status_kelas'] = "KELAS DIMULAI";
 
         // $instruktur->update([
         //     'keterlambatan' => $hasilKeterlambatan
@@ -163,6 +165,30 @@ class PresensiInstrukturController extends Controller
         return response([
             'message' => 'Delete Presensi_instruktur Failed',
             'deleted data' => null
+        ], 400);
+    }
+
+    public function updateJamSelesai($id_jadwal_harian){
+        $presensi_instruktur = Presensi_instruktur::where('id_jadwal_harian',"=", $id_jadwal_harian)->
+                                where('status_kelas','=','KELAS DIMULAI')->first();
+
+        $updateJamSelesai = Carbon::now()->format('H:i:s');
+
+        $presensi_instruktur->update([
+            'update_jam_selesai' => $updateJamSelesai,
+            'status_kelas' => 'KELAS SELESAI'
+        ]);
+
+        if ($presensi_instruktur->save()) {
+            return response([
+                'message' => 'Update Jam Selesai Kelas Success',
+                'data' => $presensi_instruktur
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Update Jam Selesai Kelas Failed',
+            'data' => null
         ], 400);
     }
 }

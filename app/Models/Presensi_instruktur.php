@@ -15,6 +15,8 @@ class Presensi_instruktur extends Model
     protected $fillable = [
         'id_jadwal_harian',
         'keterlambatan',
-        'update_jam_mulai'
+        'update_jam_mulai',
+        'update_jam_selesai',
+        'status_kelas'
     ];
 }

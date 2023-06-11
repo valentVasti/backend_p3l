@@ -63,6 +63,7 @@ Route::delete('jadwalUmum/{id}', 'App\Http\Controllers\JadwalUmumController@dest
 
 Route::get('jadwalHarian', 'App\Http\Controllers\JadwalHarianController@index');
 Route::get('jadwalHarian/{id}', 'App\Http\Controllers\JadwalHarianController@show');
+Route::get('jadwalHarianByDate/{date}', 'App\Http\Controllers\JadwalHarianController@getJadwalHarianByDate');
 Route::post('jadwalHarian', 'App\Http\Controllers\JadwalHarianController@store');
 Route::put('jadwalHarian/{id}', 'App\Http\Controllers\JadwalHarianController@update');
 Route::delete('jadwalHarian/{id}', 'App\Http\Controllers\JadwalHarianController@destroy');
@@ -95,6 +96,7 @@ Route::get('getExpiredDepoK', 'App\Http\Controllers\DepositKelasController@getEx
 Route::get('resetDepositKelas/{id_member}/{id_kelas}', 'App\Http\Controllers\DepositKelasController@resetDepositKelas');
 
 Route::post('presensiInstruktur', 'App\Http\Controllers\PresensiInstrukturController@store');
+Route::put('presensiInstruktur/updateJamSelesai/{id_jadwal_harian}', 'App\Http\Controllers\PresensiInstrukturController@updateJamSelesai');
 
 Route::get('bookingGym', 'App\Http\Controllers\BookingGymController@index');
 Route::get('bookingGymToday', 'App\Http\Controllers\BookingGymController@getBookingGymToday');

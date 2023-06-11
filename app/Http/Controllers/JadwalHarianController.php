@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Jadwal_harian;
 use App\Models\Kelas;
 use App\Models\Instruktur;
+use App\Models\Presensi_instruktur;
 use Illuminate\Support\Facades\Validator;
 
 class JadwalHarianController extends Controller
@@ -138,5 +139,36 @@ class JadwalHarianController extends Controller
             'message' => 'Delete Jadwal_harian Failed',
             'deleted data' => null
         ], 400);
+    }
+
+    public function getJadwalHarianByDate($date)
+    {
+        $jadwalHarian = Jadwal_harian::where('tgl_kelas', '=', $date)
+            ->where('keterangan', '!=', "LIBUR")
+            ->with('kelas', 'instruktur')
+            ->get();
+        
+        foreach($jadwalHarian as $key => $data){
+            $presensiInstruktur = Presensi_instruktur::where('id_jadwal_harian', '=', $data->id_jadwal_harian)
+                                    ->where('status_kelas', "!=", 'KELAS DIMULAI')->get();
+
+            if(count($presensiInstruktur) > 0){
+                unset($jadwalHarian[$key]);
+            }
+        }
+
+        $jadwalHarian = $jadwalHarian->values();
+
+        if (count($jadwalHarian) > 0) {
+            return response([
+                'message' => 'Retrieve All Success',
+                'data' => $jadwalHarian 
+            ], 200);
+        } else {
+            return response([
+                'message' => 'Empty',
+                'data' => $jadwalHarian
+            ], 200);
+        }
     }
 }
