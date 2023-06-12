@@ -9,6 +9,7 @@ use App\Models\Deposit_kelas;
 use App\Models\Jadwal_harian;
 use App\Models\Kelas;
 use App\Models\Member;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class BookingKelasController extends Controller
@@ -193,23 +194,37 @@ class BookingKelasController extends Controller
 
     public function cancelBookingKelas($id_jadwal_harian, $id_member, $tgl_booking_kelas)
     {
-        $booking_kelas = Booking_kelas::where('id_jadwal_harian','=', $id_jadwal_harian)
-                        ->where('id_member','=', $id_member)
-                        ->where('tgl_booking_kelas', '=', $tgl_booking_kelas)
-                        ->update(['status' => 'BATAL']);
+        $tgl_booking_kelas_check = Carbon::parse($tgl_booking_kelas);
 
-        if ($booking_kelas == 0) {
+        $booking_kelas = Booking_kelas::where('id_jadwal_harian','=', $id_jadwal_harian)
+        ->where('id_member','=', $id_member)
+        ->where('tgl_booking_kelas', '=', $tgl_booking_kelas)->get();
+
+        if (count($booking_kelas) != 0) {
+            if(!$tgl_booking_kelas_check->isPast()){
+
+                $booking_kelas = Booking_kelas::where('id_jadwal_harian','=', $id_jadwal_harian)
+                ->where('id_member','=', $id_member)
+                ->where('tgl_booking_kelas', '=', $tgl_booking_kelas)->update(['status' => 'BATAL']);
+
+                return response([
+                    'message' => 'Cancel Booking_kelas Success',
+                    'id_member' => $id_member,
+                    'canceled_data' => $booking_kelas
+                    ], 200);
+            }else{
+                return response([
+                    'message' => 'Maksimal batal H-1 dari tanggal kelas',
+                    'canceled_data' => null
+                ], 404);
+            }
+
+        }else{
             return response([
                 'message' => 'Booking_kelas Not Found',
                 'canceled_data' => null
             ], 404);
         }
-
-        return response([
-            'message' => 'Cancel Booking_kelas Success',
-            'id_member' => $id_member,
-            'canceled_data' => $booking_kelas
-        ], 200);
     }
 
     public function getByIdMember($id_member)
