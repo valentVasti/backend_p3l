@@ -15,7 +15,7 @@ class BookingKelasController extends Controller
 {
     public function index()
     {
-        $booking_kelas = Booking_kelas::all();
+        $booking_kelas = Booking_kelas::with('jadwal_harian.kelas', 'jadwal_harian.instruktur', 'member')->get();
 
         if (count($booking_kelas) > 0) {
             return response([
@@ -210,5 +210,22 @@ class BookingKelasController extends Controller
             'id_member' => $id_member,
             'deleted data' => $booking_kelas
         ], 200);
+    }
+
+    public function getByIdMember($id_member)
+    {
+        $booking_kelas = Booking_kelas::where('id_member','=', $id_member)->with('jadwal_harian.kelas', 'jadwal_harian.instruktur', 'member')->get();
+
+        if (count($booking_kelas) > 0) {
+            return response([
+                'message' => 'Retrieve All Success',
+                'data' => $booking_kelas
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Empty',
+            'data' => null
+        ], 400);
     }
 }

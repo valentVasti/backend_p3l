@@ -169,8 +169,9 @@ class PresensiInstrukturController extends Controller
     }
 
     public function updateJamSelesai($id_jadwal_harian){
+        
         $presensi_instruktur = Presensi_instruktur::where('id_jadwal_harian',"=", $id_jadwal_harian)->
-                                where('status_kelas','=','KELAS DIMULAI')->first();
+                                where('status_kelas','!=','KELAS DIMULAI')->first();
 
         $updateJamSelesai = Carbon::now()->format('H:i:s');
 
@@ -190,5 +191,26 @@ class PresensiInstrukturController extends Controller
             'message' => 'Update Jam Selesai Kelas Failed',
             'data' => null
         ], 400);
+    }
+
+    public function checkUpdateJamMulai($id_jadwal_harian){
+        $presensi_instruktur = Presensi_instruktur::where('id_jadwal_harian','=', $id_jadwal_harian)
+                                ->where('status_kelas','=','KELAS DIMULAI')->get();
+
+        if(count($presensi_instruktur) > 0){
+            return response([
+                'message' => 'Sudah update jam mulai',
+                'status' => '1',
+                'data' => $presensi_instruktur,
+                'id_jadwal_harian' => $id_jadwal_harian
+            ], 200);
+        }else{
+            return response([
+                'message' => 'Kelas sudah selesai',
+                'status' => '0',
+                'data' => $presensi_instruktur,
+                'id_jadwal_harian' => $id_jadwal_harian
+            ], 200);
+        }
     }
 }

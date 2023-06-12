@@ -97,6 +97,7 @@ Route::get('resetDepositKelas/{id_member}/{id_kelas}', 'App\Http\Controllers\Dep
 
 Route::post('presensiInstruktur', 'App\Http\Controllers\PresensiInstrukturController@store');
 Route::put('presensiInstruktur/updateJamSelesai/{id_jadwal_harian}', 'App\Http\Controllers\PresensiInstrukturController@updateJamSelesai');
+Route::get('presensiInstruktur/checkUpdateJamMulai/{id_jadwal_harian}', 'App\Http\Controllers\PresensiInstrukturController@checkUpdateJamMulai');
 
 Route::get('bookingGym', 'App\Http\Controllers\BookingGymController@index');
 Route::get('bookingGymToday', 'App\Http\Controllers\BookingGymController@getBookingGymToday');
@@ -105,6 +106,7 @@ Route::get('cancelBookingGym/{id_member}/{sesi}/{tgl_booking}', 'App\Http\Contro
 
 Route::get('bookingKelas', 'App\Http\Controllers\BookingKelasController@index');
 Route::post('bookingKelas', 'App\Http\Controllers\BookingKelasController@store');
+Route::get('bookingKelas/{id_member}', 'App\Http\Controllers\BookingKelasController@getByIdMember');
 Route::get('cancelBookingKelas/{id_jadwal_harian}/{id_member}/{tgl_booking_kelas}', 'App\Http\Controllers\BookingKelasController@cancelBookingKelas');
 
 Route::get('presensiGym', 'App\Http\Controllers\PresensiGymController@index');

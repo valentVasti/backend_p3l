@@ -47,5 +47,9 @@ class Member extends Model
     public function presensiKelas(){
         return $this->hasMany(Member::class, 'id_member', 'id');
     }
+
+    public function bookingKelas(){
+        return $this->hasMany(Member::class, 'id_member', 'id');
+    }
 }
 

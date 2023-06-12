@@ -19,4 +19,11 @@ class Booking_kelas extends Model
         'status',
     ];
 
+    public function jadwal_harian(){
+        return $this->belongsTo(Jadwal_harian::class, 'id_jadwal_harian');
+    }
+
+    public function member(){
+        return $this->belongsTo(Member::class, 'id_member');
+    }
 }

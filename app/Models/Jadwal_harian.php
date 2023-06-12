@@ -36,7 +36,11 @@ class Jadwal_harian extends Model
     }
 
     public function presensiKelas(){
-        return $this->hasMany(Jadwal_harian::class, 'id_member', 'id');
+        return $this->hasMany(Jadwal_harian::class, 'id_jadwal_harian', 'id');
+    }
+
+    public function bookingKelas(){
+        return $this->hasMany(Jadwal_harian::class, 'id_jadwal_harian', 'id');
     }
 
 }
