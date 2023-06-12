@@ -201,14 +201,14 @@ class BookingKelasController extends Controller
         if ($booking_kelas == 0) {
             return response([
                 'message' => 'Booking_kelas Not Found',
-                'canceled data' => null
+                'canceled_data' => null
             ], 404);
         }
 
         return response([
             'message' => 'Cancel Booking_kelas Success',
             'id_member' => $id_member,
-            'deleted data' => $booking_kelas
+            'canceled_data' => $booking_kelas
         ], 200);
     }
 
