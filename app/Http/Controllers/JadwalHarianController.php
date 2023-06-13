@@ -171,4 +171,37 @@ class JadwalHarianController extends Controller
             ], 200);
         }
     }
+
+    public function getJadwalHarianTodayByInstruktur($id_instruktur,$date)
+    {
+        
+        $jadwalHarian = Jadwal_harian::where('tgl_kelas', '=', $date)
+            ->where('keterangan', '!=', "LIBUR")
+            ->where('id_instruktur', '=', $id_instruktur)
+            ->with('kelas', 'instruktur')
+            ->get();
+        
+        foreach($jadwalHarian as $key => $data){
+            $presensiInstruktur = Presensi_instruktur::where('id_jadwal_harian', '=', $data->id_jadwal_harian)
+                                    ->where('status_kelas', "!=", 'KELAS DIMULAI')->get();
+
+            if(count($presensiInstruktur) > 0){
+                unset($jadwalHarian[$key]);
+            }
+        }
+
+        $jadwalHarian = $jadwalHarian->values();
+
+        if (count($jadwalHarian) > 0) {
+            return response([
+                'message' => 'Retrieve All Success',
+                'data' => $jadwalHarian 
+            ], 200);
+        } else {
+            return response([
+                'message' => 'Empty',
+                'data' => $jadwalHarian
+            ], 200);
+        }
+    }
 }

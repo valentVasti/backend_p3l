@@ -243,4 +243,23 @@ class BookingKelasController extends Controller
             'data' => null
         ], 400);
     }
+
+    public function getByIdJadwalHarian($id_jadwal_harian)
+    {
+        $booking_kelas = Booking_kelas::where('id_jadwal_harian','=', $id_jadwal_harian)
+                            ->where('status','=','BELUM PRESENSI')
+                            ->with('jadwal_harian.kelas', 'jadwal_harian.instruktur', 'member')->get();
+
+        if (count($booking_kelas) > 0) {
+            return response([
+                'message' => 'Retrieve All Success',
+                'data' => $booking_kelas
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Empty',
+            'data' => null
+        ], 400);
+    }
 }

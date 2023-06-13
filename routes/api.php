@@ -64,6 +64,7 @@ Route::delete('jadwalUmum/{id}', 'App\Http\Controllers\JadwalUmumController@dest
 Route::get('jadwalHarian', 'App\Http\Controllers\JadwalHarianController@index');
 Route::get('jadwalHarian/{id}', 'App\Http\Controllers\JadwalHarianController@show');
 Route::get('jadwalHarianByDate/{date}', 'App\Http\Controllers\JadwalHarianController@getJadwalHarianByDate');
+Route::get('jadwalKelasInstrukturToday/{id_instruktur}/{date}', 'App\Http\Controllers\JadwalHarianController@getJadwalHarianTodayByInstruktur');
 Route::post('jadwalHarian', 'App\Http\Controllers\JadwalHarianController@store');
 Route::put('jadwalHarian/{id}', 'App\Http\Controllers\JadwalHarianController@update');
 Route::delete('jadwalHarian/{id}', 'App\Http\Controllers\JadwalHarianController@destroy');
@@ -107,6 +108,7 @@ Route::get('cancelBookingGym/{id_member}/{sesi}/{tgl_booking}', 'App\Http\Contro
 Route::get('bookingKelas', 'App\Http\Controllers\BookingKelasController@index');
 Route::post('bookingKelas', 'App\Http\Controllers\BookingKelasController@store');
 Route::get('bookingKelas/{id_member}', 'App\Http\Controllers\BookingKelasController@getByIdMember');
+Route::get('bookingKelas/getByIdJadwalHarian/{id_jadwal_harian}', 'App\Http\Controllers\BookingKelasController@getByIdJadwalHarian');
 Route::get('cancelBookingKelas/{id_jadwal_harian}/{id_member}/{tgl_booking_kelas}', 'App\Http\Controllers\BookingKelasController@cancelBookingKelas');
 
 Route::get('presensiGym', 'App\Http\Controllers\PresensiGymController@index');
@@ -115,6 +117,7 @@ Route::post('presensiGym/{presensi}', 'App\Http\Controllers\PresensiGymControlle
 Route::get('presensiKelas', 'App\Http\Controllers\PresensiKelasController@index');
 Route::get('presensiKelas/{id}', 'App\Http\Controllers\PresensiKelasController@show');
 Route::post('presensiKelas', 'App\Http\Controllers\PresensiKelasController@store');
+Route::get('updateDepositMember/{id_jadwal_harian}', 'App\Http\Controllers\PresensiKelasController@updateDepositMember');
 
 Route::get('laporanPendapatan', 'App\Http\Controllers\LaporanController@laporanPendapatan');
 Route::get('laporanGymBulanan/{month}', 'App\Http\Controllers\LaporanController@laporanGymBulanan');

@@ -145,7 +145,8 @@ class LaporanController extends Controller
                     // berarti ada instruktur lain
                     foreach($jadwal_harian as $data_jadwal_harian){
 
-                        $presensi_kelas = Presensi_kelas::where('id_jadwal_harian', '=', $data_jadwal_harian['id_jadwal_harian'])->get();
+                        $presensi_kelas = Presensi_kelas::where('id_jadwal_harian', '=', $data_jadwal_harian['id_jadwal_harian'])
+                                                            ->where('status_kehadiran', '=', 'HADIR')->get();
                         $jadwal_libur = Jadwal_harian::where('id_jadwal_harian','=',$data_jadwal_harian['id_jadwal_harian'])
                                             ->where('keterangan','=','LIBUR')->get();
                         $data_laporan['nama_kelas'] = $data_kelas['nama_kelas'];
@@ -157,7 +158,8 @@ class LaporanController extends Controller
                     }                 
                 }else{
                     
-                    $presensi_kelas = Presensi_kelas::where('id_jadwal_harian', '=', $jadwal_harian[0]['id_jadwal_harian'])->get();
+                    $presensi_kelas = Presensi_kelas::where('id_jadwal_harian', '=', $jadwal_harian[0]['id_jadwal_harian'])
+                                                        ->where('status_kehadiran', '=', 'HADIR')->get();
                     $jadwal_libur = Jadwal_harian::where('id_jadwal_harian','=',$jadwal_harian[0]['id_jadwal_harian'])
                                         ->where('keterangan','=','LIBUR')->get();
                     $data_laporan['nama_kelas'] = $data_kelas['nama_kelas'];

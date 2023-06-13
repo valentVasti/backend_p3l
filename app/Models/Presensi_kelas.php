@@ -15,7 +15,8 @@ class Presensi_kelas extends Model
     protected $fillable = [
         'id_jadwal_harian',
         'id_member',
-        'tgl_presensi_kelas'
+        'tgl_presensi_kelas',
+        'status_kehadiran'
     ];
 
     public function member(){

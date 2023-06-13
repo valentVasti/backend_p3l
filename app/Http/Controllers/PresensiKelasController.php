@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Presensi_kelas;
 use App\Models\Deposit_kelas;
 use App\Models\Jadwal_harian;
+use App\Models\Jadwal_umum;
 use App\Models\Kelas;
 use App\Models\Member;
 use Carbon\Carbon;
@@ -100,59 +101,31 @@ class PresensiKelasController extends Controller
         $validate = Validator::make($storeData, [
             'id_jadwal_harian' => 'required',
             'id_member' => 'required',
+            'status_kehadiran' => 'required'
         ]);
 
         if ($validate->fails())
             return response(['message' => $validate->errors()], 400);
-            
-        $member = Member::find($storeData['id_member']);
-        $jadwal_harian = Jadwal_harian::find($storeData['id_jadwal_harian']);
-        $kelas = Kelas::find($jadwal_harian['id_kelas']);
-
+        
         $storeData['tgl_presensi_kelas'] = Carbon::today();
+        
+        $booking_kelas = Booking_kelas::where('id_member','=', $storeData['id_member'])
+                                    ->where('id_jadwal_harian','=', $storeData['id_jadwal_harian'])
+                                    ->where('tgl_booking_kelas','=', $storeData['tgl_presensi_kelas'])
+                                    ->get();
 
-        $deposit_kelas = Deposit_kelas::where('id_member','=', $storeData['id_member'])
-                            ->where('id_kelas', '=', $jadwal_harian['id_kelas'])->first();
-
-        if(!is_null($deposit_kelas)){
-            if($deposit_kelas['deposit_kelas'] != 0){
-                //pake deposit kelas
-
-                $sisa_deposit = $deposit_kelas['deposit_kelas'];
-                $tarif_kelas = 1;
-
-                $update_deposit_kelas = $sisa_deposit - $tarif_kelas;
-
-                $deposit_kelas->update([
-                    'deposit_kelas' => $update_deposit_kelas
-                ]);
-
-                $deposit_digunakan = 'Deposit Kelas';
-            }
-        }else{
-            if($member['deposit_uang'] >= $kelas['harga']){
-                //pake deposit uang
-                $sisa_deposit = $member['deposit_uang'];
-                $tarif_kelas = $kelas['harga'];
-
-                $update_deposit_uang = $sisa_deposit - $tarif_kelas;
-
-                $member->update([
-                    'deposit_uang' => $update_deposit_uang
-                ]);
-
-                $deposit_digunakan = 'Deposit Uang';
-            }else{
-                return response([
-                    'message' => 'Deposit uang tidak cukup',
-                ], 400);
-            }
+        if(!count($booking_kelas) > 0){
+            return response([
+                'message' => 'Booking Kelas Not Found',
+                'data' => $booking_kelas,
+            ], 400);           
         }
 
         $booking_kelas_update = Booking_kelas::where('id_member','=', $storeData['id_member'])
                                 ->where('id_jadwal_harian','=', $storeData['id_jadwal_harian'])
                                 ->where('tgl_booking_kelas','=', $storeData['tgl_presensi_kelas'])
                                 ->update(['status' => 'SUDAH PRESENSI']);
+                                
 
         $booking_kelas_store = Presensi_kelas::create($storeData);
         $booking_kelas_store = Presensi_kelas::latest()->first();
@@ -160,10 +133,7 @@ class PresensiKelasController extends Controller
         return response([
             'message' => 'Add Presensi_kelas Success',
             'data' => $booking_kelas_store,
-            'booking kelas update' => $booking_kelas_update,
-            'deposit digunakan' => $deposit_digunakan,
-            'harga' => $tarif_kelas,
-            'sisa_deposit' => $sisa_deposit
+            'booking kelas update' => $booking_kelas_update
         ], 200);
     }
 
@@ -234,5 +204,68 @@ class PresensiKelasController extends Controller
             'message' => 'Delete Presensi_kelas Failed',
             'deleted data' => null
         ], 400);
+    }
+
+    public function updateDepositMember($id_jadwal_harian)
+    {
+        
+        $booking_kelas = Booking_kelas::where('id_jadwal_harian','=',$id_jadwal_harian)->get();
+        $jadwal_harian = Jadwal_harian::find($id_jadwal_harian);
+
+        foreach ($booking_kelas as $data) {
+            
+            $id_member = $data['id_member'];
+            $member = Member::find($id_member);
+
+            // $jadwal_harian = Jadwal_harian::find($data['id_jadwal_harian']);
+            $kelas = Kelas::find($jadwal_harian['id_kelas']);
+    
+            $storeData['tgl_presensi_kelas'] = Carbon::today();
+    
+            $deposit_kelas = Deposit_kelas::where('id_member','=', $id_member)
+                                ->where('id_kelas', '=', $jadwal_harian['id_kelas'])->first();
+
+            if(!is_null($deposit_kelas)){
+                if($deposit_kelas['deposit_kelas'] != 0){
+                    //pake deposit kelas
+                    //kalo deposit kelas gaada, dari awal gabakal bisa booking   
+                    $sisa_deposit = $deposit_kelas['deposit_kelas'];
+                    $tarif_kelas = 1;
+    
+                    $update_deposit_kelas = $sisa_deposit - $tarif_kelas;
+    
+                    $deposit_kelas = Deposit_kelas::where('id_member','=', $id_member)
+                                        ->where('id_kelas', '=', $jadwal_harian['id_kelas'])
+                                        ->update([
+                                            'deposit_kelas' => $update_deposit_kelas
+                                        ]);   
+                    // $deposit_digunakan = 'Deposit Kelas';
+                }
+            }else{
+                if($member['deposit_uang'] >= $kelas['harga']){
+                    //pake deposit uang
+                    $sisa_deposit = $member['deposit_uang'];
+                    $tarif_kelas = $kelas['harga'];
+    
+                    $update_deposit_uang = $sisa_deposit - $tarif_kelas;
+    
+                    $member->update([
+                        'deposit_uang' => $update_deposit_uang
+                    ]);
+    
+                    // $deposit_digunakan = 'Deposit Uang';
+                }else{
+                    return response([
+                        'message' => 'Deposit uang tidak cukup',
+                    ], 400);
+                }
+            }
+
+        }
+                  
+        return response([
+            'message' => 'Deposit semua member terpotong',
+            'jumlah_member' => count($booking_kelas),
+        ], 200);
     }
 }
