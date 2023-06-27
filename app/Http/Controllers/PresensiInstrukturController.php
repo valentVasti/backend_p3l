@@ -62,11 +62,13 @@ class PresensiInstrukturController extends Controller
         $jadwal_harian = Jadwal_harian::find($storeData['id_jadwal_harian']);
         $instruktur = Instruktur::find($jadwal_harian['id_instruktur']);
 
-        // $updateJamMulai = Carbon::now()->format('H:i:s');
+        $updateJamMulai = Carbon::now()->format('H:i:s');
         // $updateJamMulai = '08:03:10';
 
         $jamMulaiKelas = Carbon::parse($jadwal_harian['jam_mulai']);
-        $updateJamMulai = Carbon::parse('08:03:10');
+        // $updateJamMulai = Carbon::parse('08:03:10');
+        $updateJamMulai = Carbon::now()->format('H:i:s');
+        $updateJamMulai = Carbon::parse($updateJamMulai);
         $keterlambatan = $updateJamMulai->diff($jamMulaiKelas);
 
         $keterlambatanInstruktur = Carbon::parse($instruktur['keterlambatan']);
@@ -171,7 +173,7 @@ class PresensiInstrukturController extends Controller
     public function updateJamSelesai($id_jadwal_harian){
         
         $presensi_instruktur = Presensi_instruktur::where('id_jadwal_harian',"=", $id_jadwal_harian)->
-                                where('status_kelas','!=','KELAS DIMULAI')->first();
+                                where('status_kelas','=','KELAS DIMULAI')->first();
 
         $updateJamSelesai = Carbon::now()->format('H:i:s');
 

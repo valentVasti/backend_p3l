@@ -125,5 +125,6 @@ Route::get('laporanKelasBulanan/{month}', 'App\Http\Controllers\LaporanControlle
 Route::get('laporanKinerjaInstruktur', 'App\Http\Controllers\LaporanController@laporanKinerjaInstruktur');
 Route::get('cetakPdf', 'App\Http\Controllers\LaporanController@cetakLaporan');
 
-
-
+Route::get('historyTransaksi/{id_member}', 'App\Http\Controllers\HistoryController@historyTransaksiMember');
+Route::get('historyKelas/{id_member}', 'App\Http\Controllers\HistoryController@historyKelasMember');
+Route::get('historyInstruktur/{id_instruktur}', 'App\Http\Controllers\HistoryController@historyInstruktur');

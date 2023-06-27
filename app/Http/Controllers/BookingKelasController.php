@@ -259,7 +259,7 @@ class BookingKelasController extends Controller
 
         return response([
             'message' => 'Empty',
-            'data' => null
+            'data' => $booking_kelas
         ], 400);
     }
 }

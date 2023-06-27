@@ -130,8 +130,8 @@ class IzinInstrukturController extends Controller
     public function getIzinByIdInstruktur($id_instruktur)
     {
         $izin_instruktur = Izin_instruktur::where('id_instruktur','=', $id_instruktur)->with('instruktur')->get();
-        // $instruktur_pengganti = Instruktur::find($izin_instruktur['id_instruktur_pengganti'])->get();
-        
+
+        //kalo izin instruktur perlu di history, kasi where status_konfirmasi
         if(count($izin_instruktur) > 0){
             return response([
                 'message' => 'Retrieve All Success',
