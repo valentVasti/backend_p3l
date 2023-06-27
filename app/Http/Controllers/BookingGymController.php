@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-//test push
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking_gym;
